@@ -1,0 +1,406 @@
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+<script type="module">
+	import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+	createChat({
+		webhookUrl: 'https://migussjo.app.n8n.cloud/webhook/c73ff55b-c4b1-4a15-9ebf-2ef41578796b/chat'
+	});
+</script>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LinguaLab – Plataforma de Prácticas Multilingües para Estudiantes Internacionales</title>
+
+  <!-- Paleta negro + azul claro -->
+  <style>
+    :root{
+      --bg:#0c0c0c;              /* negro suave */
+      --card:#111214;            /* gris oscuro */
+      --accent:#4dbbff;          /* azul claro */
+      --accent-2:#7fd4ff;        /* azul claro más suave */
+      --muted:#c4c4c4;
+      --text:#f5f5f5;
+    }
+
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.45;
+    }
+
+    .container{
+      max-width:1100px;
+      margin:auto;
+      padding:24px;
+    }
+
+    /* HERO */
+    .hero{
+      display:grid;
+      grid-template-columns:1fr 380px;
+      gap:26px;
+      margin-bottom:32px;
+    }
+    .hero-card{
+      background:var(--card);
+      padding:28px;
+      border-radius:16px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.45);
+    }
+    .eyebrow{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--accent);
+      color:#000;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+    h1{
+      margin:0 0 12px 0;
+      font-size:28px;
+    }
+    .lead{
+      color:var(--muted);
+      margin-bottom:20px;
+    }
+    .cta-row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      background:var(--accent);
+      color:#000;
+      border:none;
+      padding:12px 18px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:700;
+      box-shadow:0 6px 18px rgba(77,187,255,0.35);
+      transition:0.15s ease;
+    }
+    .btn:hover{ transform:translateY(-3px); }
+    .btn-ghost{
+      background:transparent;
+      border:2px solid var(--accent);
+      padding:10px 16px;
+      border-radius:10px;
+      color:var(--accent);
+      font-weight:700;
+    }
+
+    /* TARJETA LATERAL */
+    .summary{
+      background:#0f1012;
+      padding:20px;
+      border-radius:14px;
+      box-shadow:0 8px 26px rgba(0,0,0,0.45);
+    }
+    .metric{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-bottom:12px;
+    }
+    .dot{
+      width:44px;height:44px;
+      border-radius:10px;
+      background:var(--accent);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#000;
+      font-weight:700;
+    }
+
+    section{ margin-bottom:28px; }
+    ul.obj{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:grid;
+      gap:10px;
+    }
+    ul.obj li{
+      padding:12px;
+      background:#141619;
+      border-left:4px solid var(--accent);
+      border-radius:10px;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:16px;
+    }
+    .card{
+      background:#141619;
+      padding:18px;
+      border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.4);
+      transition:0.15s ease;
+    }
+    .card:hover{ transform:translateY(-6px); }
+
+    /* Formulario */
+    .form-wrap{
+      display:grid;
+      grid-template-columns:1fr 420px;
+      gap:20px;
+    }
+    .form-instructions{
+      background:#141619;
+      padding:20px;
+      border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.4);
+    }
+
+    footer{
+      text-align:center;
+      margin-top:20px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* Asistente flotante */
+    .assistant-btn{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      background:var(--accent);
+      color:#000;
+      width:56px;height:56px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-shadow:0 10px 30px rgba(77,187,255,0.35);
+    }
+    .assistant-panel{
+      position:fixed;
+      right:20px;
+      bottom:90px;
+      width:330px;
+      background:#0f1012;
+      border-radius:12px;
+      box-shadow:0 30px 60px rgba(0,0,0,0.55);
+      display:none;
+      flex-direction:column;
+    }
+    .assistant-panel header{
+      background:var(--accent);
+      color:#000;
+      padding:10px 12px;
+      font-weight:700;
+    }
+    .assistant-body{
+      padding:12px;
+      height:250px;
+      overflow:auto;
+    }
+    .assistant-input{
+      display:flex;
+      gap:8px;
+      padding:10px;
+    }
+    .assistant-input input{
+      flex:1;
+      padding:8px;
+      border-radius:8px;
+      border:none;
+    }
+    .assistant-input button{
+      padding:8px 12px;
+      background:var(--accent);
+      border:none;
+      border-radius:7px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .msg{
+      margin-bottom:8px;
+      padding:8px 10px;
+      border-radius:8px;
+      max-width:80%;
+      font-size:13px;
+    }
+    .msg.user{
+      background:#1a1f24;
+      margin-left:auto;
+      color:var(--accent);
+    }
+    .msg.bot{
+      background:#202328;
+      color:var(--muted);
+    }
+
+    @media(max-width:900px){
+      .hero,.form-wrap{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- Sección Hero -->
+  <div class="hero">
+    <div class="hero-card">
+      <span class="eyebrow">Universidad Global Europea</span>
+      <h1>LinguaLab – Plataforma de Prácticas Multilingües para Estudiantes Internacionales</h1>
+      <p class="lead">Acompañamos a estudiantes internacionales con actividades guiadas, retos semanales, tutorías y apoyo inteligente 24/7.</p>
+      <div class="cta-row">
+        <button class="btn" id="cta-register">Quiero participar</button>
+        <button class="btn-ghost">Más información</button>
+      </div>
+    </div>
+
+    <aside class="summary">
+      <div class="metric">
+        <div class="dot">LL</div>
+        <div>
+          <strong>LinguaLab</strong><br>
+          <small style="color:var(--muted)">Prácticas comunicativas guiadas</small>
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:14px">
+        Plataforma digital para mejorar el uso real del idioma mediante retos, tutorías y recursos interactivos.
+      </p>
+    </aside>
+  </div>
+
+  <!-- ¿Qué es LinguaLab? -->
+  <section>
+    <h2>¿Qué es LinguaLab?</h2>
+    <p style="color:var(--muted)">
+      LinguaLab es una iniciativa de la Universidad Global Europea para apoyar el aprendizaje de idiomas 
+      de estudiantes internacionales. Ofrece retos semanales, tutorías personalizadas, materiales descargables 
+      y un asistente inteligente que responde dudas usando el contexto académico del proyecto.
+    </p>
+  </section>
+
+  <!-- Objetivos -->
+  <section>
+    <h2>Objetivos del programa</h2>
+    <ul class="obj">
+      <li>Mejorar competencias comunicativas reales.</li>
+      <li>Facilitar la adaptación cultural y académica.</li>
+      <li>Ofrecer retroalimentación formativa continua.</li>
+      <li>Acompañar con tutorías especializadas.</li>
+    </ul>
+  </section>
+
+  <!-- Actividades -->
+  <section>
+    <h2>Actividades y beneficios</h2>
+    <div class="grid-3">
+      <div class="card"><h3>Retos semanales</h3><p>Pon a prueba tus habilidades con tareas breves y prácticas.</p></div>
+      <div class="card"><h3>Tutorías personalizadas</h3><p>Revisión de pronunciación, estructura y producción oral.</p></div>
+      <div class="card"><h3>Material descargable</h3><p>Guías, vocabulario y ejercicios de distintos niveles.</p></div>
+      <div class="card"><h3>Asistente 24/7</h3><p>Resuelve dudas al instante con un asistente contextual.</p></div>
+      <div class="card"><h3>Seguimiento continuo</h3><p>Progress tracking y feedback personalizado.</p></div>
+    </div>
+  </section>
+
+  <!-- Registro -->
+  <section>
+    <h2>Registro</h2>
+    <div class="form-wrap">
+      <div class="form-instructions">
+        <h3>Únete a LinguaLab</h3>
+        <p class="small" style="color:var(--muted)">Completa el formulario oficial para participar.</p>
+        <button class="btn" id="scroll-form">Ir al formulario</button>
+      </div>
+
+      <!-- Iframe entregado por el usuario -->
+      <div id="form-frame" style="overflow:hidden;border-radius:12px;">
+        <iframe src="https://forms.gle/XkhPC2SNZfFkyJE7A"
+                width="100%" height="720" frameborder="0"
+                marginheight="0" marginwidth="0"
+                style="background:#fff;color:#000">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Universidad Global Europea — Prototipo académico. © <span id="year"></span>
+  </footer>
+</div>
+
+<!-- Asistente flotante -->
+<div class="assistant-btn" id="assistant-toggle">💬</div>
+
+<div class="assistant-panel" id="assistant-panel">
+  <header>Asistente LinguaLab</header>
+  <div class="assistant-body" id="assistant-body">
+    <div class="msg bot">Hola, ¿en qué puedo ayudarte respecto a LinguaLab?</div>
+  </div>
+  <div class="assistant-input">
+    <input id="assistant-input" placeholder="Escribe tu pregunta..." />
+    <button id="assistant-send">Enviar</button>
+  </div>
+</div>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  const formFrame = document.getElementById("form-frame");
+  const scrollBtn = document.getElementById("scroll-form");
+  const cta = document.getElementById("cta-register");
+  scrollBtn.onclick = () => formFrame.scrollIntoView({behavior:"smooth"});
+  cta.onclick = () => formFrame.scrollIntoView({behavior:"smooth"});
+
+  // Asistente
+  const panel = document.getElementById("assistant-panel");
+  const toggle = document.getElementById("assistant-toggle");
+  const bodyPanel = document.getElementById("assistant-body");
+  const inputAI = document.getElementById("assistant-input");
+  const sendAI = document.getElementById("assistant-send");
+
+  toggle.onclick = () => {
+    panel.style.display = panel.style.display === "flex" ? "none" : "flex";
+    inputAI.focus();
+  };
+
+  function appendMsg(who, text){
+    const div = document.createElement("div");
+    div.className = "msg " + who;
+    div.textContent = text;
+    bodyPanel.appendChild(div);
+    bodyPanel.scrollTop = bodyPanel.scrollHeight;
+  }
+
+  function bot(text){
+    text = text.toLowerCase();
+    if(text.includes("registro")) return "Para registrarte baja al formulario y complétalo con tus datos.";
+    if(text.includes("retos")) return "Los retos son semanales y prácticos: conversación, roles y presentaciones.";
+    if(text.includes("tutor")) return "Las tutorías son personalizadas según tu nivel y disponibilidad.";
+    return "Puedo ayudarte con registro, retos y tutorías. ¿Qué necesitas?";
+  }
+
+  sendAI.onclick = () => {
+    const val = inputAI.value.trim();
+    if(!val) return;
+    appendMsg("user", val);
+    inputAI.value = "";
+    setTimeout(()=> appendMsg("bot", bot(val)), 500);
+  };
+
+  inputAI.addEventListener("keydown", e => {
+    if(e.key === "Enter") sendAI.click();
+  });
+</script>
+
+</body>
+</html>
